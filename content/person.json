@@ -1,0 +1,51 @@
+[{
+  "name": "平台",
+  "type": 0,
+  "head_sculpture": "",
+  "desc":"",
+  "hobby": "游泳",
+  "wallet_info": {
+    "enbBalance": "2000",
+    "envLock": "1000",
+    "advertisement": [],
+    "public_key": "0xA23512F4c7f8809e43eC1262A3aae12eE76E606A"
+  }
+},{
+  "name": "网红",
+  "type": 1,
+  "head_sculpture": "",
+  "desc":"",
+  "hobby": "游泳",
+  "wallet_info": {
+    "enbBalance": "2000",
+    "envLock": "1000",
+    "advertisement": [],
+    "public_key": "0xA23512F4c7f8809e43eC1262A3aae12eE76E606A"
+  }
+},
+{
+  "name": "品牌方",
+  "type": 2,
+  "head_sculpture": "",
+  "desc":"",
+  "hobby": "游泳",
+  "wallet_info": {
+    "enbBalance": "2000",
+    "envLock": "1000",
+    "advertisement": [],
+    "public_key": "0xA23512F4c7f8809e43eC1262A3aae12eE76E606A"
+  }
+},
+{
+  "name": "买家",
+  "type": 3,
+  "head_sculpture": "",
+  "desc":"",
+  "hobby": "游泳",
+  "wallet_info": {
+    "enbBalance": "2000",
+    "envLock": "1000",
+    "advertisement": [],
+    "public_key": "0xA23512F4c7f8809e43eC1262A3aae12eE76E606A"
+  }
+}]

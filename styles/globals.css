@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+script
+.Toastify__spinner {
+  border-color: var(--toastify-spinner-color-empty-area) !important;
+  border-right-color: var(--toastify-spinner-color) !important;
+}
+
+a {
+  text-decoration:none
+}
+
+[role='switch'] {
+  -webkit-appearance: button;
+  background: rgba(0, 0, 0, 0.25);
+  background-image: none;
+}
+.ant-btn-primary {
+  background-color: #1677ff;
+}
+.ant-input {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 4px 11px;
+  color: rgba(0, 0, 0, 0.88);
+  font-size: 14px;
+  line-height: 1.5714285714285714;
+  list-style: none;
+  font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,'Noto Sans',sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  min-width: 0;
+  background-color: #ffffff;
+  background-image: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  border-top-color: rgb(217, 217, 217);
+  border-right-color: rgb(217, 217, 217);
+  border-bottom-color: rgb(217, 217, 217);
+  border-left-color: rgb(217, 217, 217);
+  border-radius: 6px;
+  transition: all 0.2s;
+}
