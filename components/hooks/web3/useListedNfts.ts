@@ -6,7 +6,7 @@ import { useCallback } from "react";
 import { toast } from "react-toastify";
 import useSWR from "swr";
 import { useAccount } from '@hooks/web3';
-import { ERC20_Token_Address } from "pages/api/utils";
+import { ERC20_AIRDROP_TOKEN, ERC20_Token_Address } from "pages/api/utils";
 
 
 type UseListedNftsResponse = {
@@ -31,13 +31,15 @@ export const hookFactory: ListedNftsHookFactory = ({ contract }) => () => {
         const metaRes = await fetch(tokenURI);
         const meta = await metaRes.json();
 
-        nfts.push({
-          price: parseFloat(ethers.utils.formatEther(item.price)),
-          tokenId: item.tokenId.toNumber(),
-          creator: item.creator,
-          isListed: item.isListed,
-          meta
-        })
+        if (item.creator !== ERC20_AIRDROP_TOKEN){
+          nfts.push({
+            price: parseFloat(ethers.utils.formatEther(item.price)),
+            tokenId: item.tokenId.toNumber(),
+            creator: item.creator,
+            isListed: item.isListed,
+            meta
+          })
+        }
       }
 
       return nfts;
