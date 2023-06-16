@@ -12,6 +12,7 @@ export type NftMeta = {
   description: string;
   image?: string;
   type: string;
+  createRole?: string;
   // attributes: NftAttribute[];
   // price?: number;
 }

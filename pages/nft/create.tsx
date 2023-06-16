@@ -3,7 +3,7 @@
 import type { NextPage } from 'next'
 import { ChangeEvent, useState } from 'react';
 import { BaseLayout } from '@ui'
-import { Switch, Button, Input, Form, Upload, UploadFile, Select } from 'antd'
+import { Switch, Button, Input, Form, Upload, UploadFile, Select, message, Image, Spin } from 'antd'
 import Link from 'next/link'
 import { NftMeta, PinataRes } from '@_types/nft';
 import axios from 'axios';
@@ -14,9 +14,10 @@ import { useAccount, useListedNfts, useNetwork } from '@hooks/web3';
 import { ExclamationIcon } from '@heroicons/react/solid';
 import MoreAttr from './FileUpload';
 import { ERC20_AIRDROP_TOKEN, ERC20_Token_Address } from 'pages/api/utils';
+import { UploadChangeParam } from 'antd/es/upload';
 
 // const ALLOWED_FIELDS = ["name", "description", "image", "attributes"];
-
+const fileTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
 const NftCreate: NextPage = () => {
   const { ethereum, contract } = useWeb3();
   const { nfts } = useListedNfts();
@@ -27,6 +28,7 @@ const NftCreate: NextPage = () => {
   const [nftURI, setNftURI] = useState("");
   const [price, setPrice] = useState("");
   const [hasURI, setHasURI] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [attr, setAttr] = useState<{ [key: string]: string }[]>([{
     attr: '',
     content: ''
@@ -36,6 +38,7 @@ const NftCreate: NextPage = () => {
     description: "",
     image: "",
     type: "",
+    createRole: "",
     custorm: [{ name: "", value: "" }],
   });
 
@@ -52,7 +55,45 @@ const NftCreate: NextPage = () => {
     return { signedData, account };
   }
 
+  // const handleImageChange = (info: UploadChangeParam<UploadFile>) => {
+  //   const { status } = info.file;
+  //   if (status !== 'uploading') {
+  //     setLoading(true);
+  //   }
+  //   if (status === 'done') {
+  //     setLoading(false);
+  //     message.success(`${info.file.name} file uploaded successfully.`);
+  //   } else if (status === 'error') {
+  //     setLoading(false);
+  //     message.error(`${info.file.name} file upload failed.`);
+  //   }
+  // }
+
+  // : UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
+  //   if (info.file.status === 'uploading') {
+  //     setLoading(true);
+  //     return;
+  //   }
+  //   if (info.file.status === 'done') {
+  //     // Get this url from response in real world.
+  //     getBase64(info.file.originFileObj as RcFile, (url) => {
+  //       setLoading(false);
+  //       setImageUrl(url);
+  //     });
+  //   }
+  // };
+
   const handleImage = async (file: any) => {
+    const { type, size } = file;
+    if (!fileTypes.includes(type)) {
+      message.error('文件类型错误');
+      return false;
+    }
+    if (size / 1024 / 1024 > 10) {
+      message.error('图片大小不能超过10m');
+      return false;
+    }
+    setLoading(true);
     const buffer = await file.arrayBuffer();
     const bytes = new Uint8Array(buffer);
 
@@ -74,12 +115,13 @@ const NftCreate: NextPage = () => {
       }
       )
       const data = res.data as PinataRes;
-
+      setLoading(false);
       setNftMeta({
         ...nftMeta,
         image: `${process.env.NEXT_PUBLIC_PINATA_DOMAIN}/ipfs/${data.IpfsHash}`
       });
     } catch (e: any) {
+      setLoading(false);
       console.error(e.message);
     }
   }
@@ -137,17 +179,17 @@ const NftCreate: NextPage = () => {
       //     throw new Error("Invalid Json structure");
       //   }
       // })
-     // 创建nft并空投30enb
+      // 创建nft并空投30enb
       const tx = await contract?.mintToken(
         nftURI,
         ethers.utils.parseEther(price),
         erc20Adress,
         owners,
-        [account.data] as string[], 
+        [account.data] as string[],
         [30],
         {
-        value: ethers.utils.parseEther(0.025.toString())
-      });
+          value: ethers.utils.parseEther(0.025.toString())
+        });
 
       await toast.promise(
         tx!.wait(), {
@@ -369,7 +411,7 @@ const NftCreate: NextPage = () => {
                 form={metaForm}
                 layout='vertical'
                 onFinish={(v) => {
-                  uploadMetadata(v)
+                  uploadMetadata({...v, createRole: account?.role})
                 }}
               >
                 <Form.Item
@@ -401,7 +443,12 @@ const NftCreate: NextPage = () => {
                 >
                   <Select
                     placeholder='Please select NFT type'
-                    options={[{ value: 'collection', label: 'collection' }, { value: 'space', label: 'space' }, { value: 'organism', label: 'organism' }, { value: 'design', label: 'design' }]}
+                    options={[
+                      { value: 'collection', label: 'collection' },
+                      { value: 'space', label: 'space' },
+                      { value: 'organism', label: 'organism' },
+                      { value: 'design', label: 'design' }
+                    ]}
                   />
                 </Form.Item>
 
@@ -409,25 +456,49 @@ const NftCreate: NextPage = () => {
                   <Form.Item name='file-upload' label='Upload a file'>
                     <Upload.Dragger
                       beforeUpload={handleImage}
+                      // onChange={handleImageChange}
+                      disabled={loading}
+                      itemRender={() => null}
+
                     >
-                      <div className="space-y-1 text-center">
-                        <svg
-                          className="mx-auto h-12 w-12 text-gray-400"
-                          stroke="currentColor"
-                          fill="none"
-                          viewBox="0 0 48 48"
-                          aria-hidden="true"
-                        >
-                          <path
-                            d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                            strokeWidth={2}
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
+                      <Spin className="space-y-1 text-center" spinning={loading}>
+
+                        {
+                          nftMeta.image ?
+
+                            <div className="flex-shrink-0 h-24 overflow-hidden justify-center flex items-center">
+                              <Image
+                                rootClassName='h-full'
+                                className={`w-full object-cover`}
+                                style={{ height: '100%' }}
+                                alt="NFT"
+                                preview={false}
+                                // width={200}
+                                // height={200}
+                                src={nftMeta?.image}
+                              // fallback="data:image/png;base64,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"
+                              />
+                            </div> : <svg
+                              className="mx-auto h-24 w-24 text-gray-400"
+                              stroke="currentColor"
+                              fill="none"
+                              viewBox="0 0 48 48"
+                              aria-hidden="true"
+                            >
+                              <path
+                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                strokeWidth={2}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                        }
+
+
+
                         <p className="pl-1">or drag and drop</p>
                         <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
-                      </div>
+                      </Spin>
                     </Upload.Dragger>
 
                   </Form.Item>

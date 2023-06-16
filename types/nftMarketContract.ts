@@ -445,9 +445,17 @@ export interface NftMarketContract {
    * StateMutability: payable
    * Type: function
    * @param tokenId Type: uint256, Indexed: false
+   * @param _token Type: address, Indexed: false
+   * @param _tokenOwner Type: address, Indexed: false
+   * @param _addresses Type: address[], Indexed: false
+   * @param _amounts Type: uint256[], Indexed: false
    */
   buyNft(
     tokenId: BigNumberish,
+    _token: string,
+    _tokenOwner: string,
+    _addresses: string[],
+    _amounts: BigNumberish[],
     overrides?: ContractTransactionOverrides
   ): Promise<ContractTransaction>;
   /**

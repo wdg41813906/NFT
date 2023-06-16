@@ -31,8 +31,9 @@ const Web3Provider: FunctionComponent = ({children}) => {
       try {
         const provider = new ethers.providers.Web3Provider(window.ethereum as any);
         const contract =  await loadContract("NftMarket", provider);
+        const erc_20_token = await loadContract("MyErc20Token", provider);
         // const blindBox =  await loadContract("NFTBBX", provider);
-        // const airdrop =  await loadContract("Airdrop", provider);
+        // const airdrop =  await loadContract("Airdrop", provider);ListedNftsHookFactory
         const signer = provider.getSigner();
         // const signedContract = contract.connect(signer);
         
@@ -41,6 +42,7 @@ const Web3Provider: FunctionComponent = ({children}) => {
           ethereum: window.ethereum,
           provider,
           contract: contract.connect(signer) as unknown as NftMarketContract,
+          erc20Token: erc_20_token.connect(signer),
           // blindBox: blindBox.connect(signer),
           // airdrop: airdrop.connect(signer),
           isLoading: false

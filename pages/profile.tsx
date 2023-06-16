@@ -123,12 +123,12 @@ const Profile: NextPage = () => {
                 <div>
                   <h3 className="font-medium text-gray-900">Information</h3>
                   <dl className="mt-2 border-t border-b border-gray-200 divide-y divide-gray-200">
-                    {/* {activeNft.meta.attributes.map((attr) => (
-                      <div key={attr.trait_type} className="py-3 flex justify-between text-sm font-medium">
-                        <dt className="text-gray-500">{attr.trait_type}: </dt>
+                    {activeNft.meta.custorm.map((attr: any) => (
+                      <div key={attr.name} className="py-3 flex justify-between text-sm font-medium">
+                        <dt className="text-gray-500">{attr.name}: </dt>
                         <dd className="text-gray-900 text-right">{attr.value}</dd>
                       </div>
-                    ))} */}
+                    ))}
                   </dl>
                 </div>
 

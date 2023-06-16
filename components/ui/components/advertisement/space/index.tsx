@@ -20,7 +20,7 @@ const NftList: FunctionComponent = () => {
                 // console.log('item', nft);
                 return (
                     <Descriptions title="User Info" key={nft.name}>
-                        <Descriptions.Item label="UserName">Zhou Maomao</Descriptions.Item>
+                        <Descriptions.Item label="UserName">Zhou </Descriptions.Item>
                         <Descriptions.Item label="Telephone">1810000000</Descriptions.Item>
                         <Descriptions.Item label="Live">Hangzhou, Zhejiang</Descriptions.Item>
                         <Descriptions.Item label="Remark">empty</Descriptions.Item>

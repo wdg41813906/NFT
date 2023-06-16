@@ -3,12 +3,10 @@
 import { FunctionComponent, useMemo } from "react";
 import { NftMeta, Nft } from "../../../../types/nft";
 import { Image } from 'antd';
-import { ERC20_AIRDROP_TOKEN, ERC20_Token_Address } from "pages/api/utils";
-import { useAccount } from "@hooks/web3";
 
 type NftItemProps = {
   item: Nft;
-  buyNft: (token: number, value: number, erc20Adress: string, owner: string, userList: string[], priceList: number[]) => Promise<void>;
+  buyNft: any;
 }
 
 function shortifyAddress(address: string) {
@@ -17,7 +15,6 @@ function shortifyAddress(address: string) {
 
 const NftItem: FunctionComponent<NftItemProps> = ({ item, buyNft }) => {
   // console.log('item', item)  
-  const { account } = useAccount();
   const image = useMemo(() => (item.meta.image || `/images/default_Nft.png`), [item.meta.image])
   return (
     <>
@@ -37,20 +34,19 @@ const NftItem: FunctionComponent<NftItemProps> = ({ item, buyNft }) => {
         <div className="flex-1">
           <div className="flex justify-between items-center">
             <div className="flex items-center mt-2">
-              {/* <div>
+              <div>
                 <img
                   className="inline-block h-9 w-9 rounded-full"
                   src="/images/default_avatar.png"
                   alt=""
                 />
-              </div> */}
-              {/* <div className="ml-3">
-                <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">Owner</p>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">Creatures</p>
                 <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">{
-                  // shortifyAddress(item.creator)
-                  '123'
+                  shortifyAddress(item.creator)
                 }</p>
-              </div> */}
+              </div>
             </div>
             <p className="text-sm font-medium text-indigo-600">
               {/* Creatures NFT */}
@@ -90,9 +86,7 @@ const NftItem: FunctionComponent<NftItemProps> = ({ item, buyNft }) => {
         <div>
           <button
             onClick={() => {
-              const erc20Adress = ERC20_Token_Address;
-              const owners = ERC20_AIRDROP_TOKEN; 
-              buyNft(item.tokenId, item.price, erc20Adress, owners, [account.data] as string[],[30]);
+              buyNft(item.tokenId, item.price);
             }}
             type="button"
             className="disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none disabled:cursor-not-allowed mr-2 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

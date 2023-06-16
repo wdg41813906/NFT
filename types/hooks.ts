@@ -9,6 +9,7 @@ export type Web3Dependencies = {
   contract: NftMarketContract;
   ethereum: MetaMaskInpageProvider;
   isLoading: boolean;
+  erc20Token: any;
   // airdrop: any;
   // blindBox: any;
 }

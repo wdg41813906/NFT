@@ -10,15 +10,15 @@ import { ERC20_Token_Address } from "pages/api/utils";
 
 
 type UseListedNftsResponse = {
-  buyNft: (token: number, value: number) => Promise<void>;
+  buyNft: (token: number, value: number, erc20Adress: string, owner: string, userList: string[], priceList: number[]) => Promise<void>;
   // airDropContract: (userList: string[], enbString: number[]) => Promise<void>;
 }
 type ListedNftsHookFactory = CryptoHookFactory<Nft[], UseListedNftsResponse>
 
 export type UseListedNftsHook = ReturnType<ListedNftsHookFactory>
 
-export const hookFactory: ListedNftsHookFactory = ({contract}) => () => {
-  const {data, ...swr} = useSWR(
+export const hookFactory: ListedNftsHookFactory = ({ contract }) => () => {
+  const { data, ...swr } = useSWR(
     contract ? "web3/useListedNfts" : null,
     async () => {
       const nfts = [] as Nft[];
@@ -39,27 +39,32 @@ export const hookFactory: ListedNftsHookFactory = ({contract}) => () => {
           meta
         })
       }
-      
+
       return nfts;
     }
   )
 
   const _contract = contract;
-  const buyNft = useCallback(async (tokenId: number, value: number) => {
+  const buyNft = useCallback(async (token: number, value: number, erc20Adress: string, owner: string, userList: string[], priceList: number[]) => {
+    debugger;
     try {
-      
+
       const result = await _contract!.buyNft(
-        tokenId, {
-          value: ethers.utils.parseEther(value.toString())
-        }
+        token, 
+        erc20Adress, 
+        owner, 
+        userList, 
+        priceList, {
+        value: ethers.utils.parseEther(value.toString())
+      }
       )
 
       await toast.promise(
         result!.wait(), {
-          pending: "Processing transaction",
-          success: "Nft is yours! Go to Profile page",
-          error: "Processing error"
-        }
+        pending: "Processing transaction",
+        success: "Nft is yours! Go to Profile page",
+        error: "Processing error"
+      }
       );
     } catch (e: any) {
       console.error(e.message);

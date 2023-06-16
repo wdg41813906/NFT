@@ -8,6 +8,7 @@ type WalletbarProps = {
   isLoading: boolean;
   isInstalled: boolean;
   account: string | undefined;
+  balance?: string;
   connect: () => void;
 }
 
@@ -19,7 +20,8 @@ const Walletbar: FunctionComponent<WalletbarProps> = ({
   isInstalled,
   isLoading,
   connect,
-  account
+  account,
+  balance
 }) => {
 
   if (isLoading) {
@@ -61,6 +63,16 @@ const Walletbar: FunctionComponent<WalletbarProps> = ({
             )}
           </Menu.Item>
           <Menu.Item>
+          {() => (
+              <button
+                disabled={true}
+                className="disabled:text-gray-500 text-xs block px-4 pt-2 text-gray-700">
+             you have {parseInt(balance as string)} enb
+              </button>
+            )} 
+          </Menu.Item>
+
+          <Menu.Item>
             {({ active }) => (
               <Link href="/profile">
                 <a
@@ -72,7 +84,10 @@ const Walletbar: FunctionComponent<WalletbarProps> = ({
 
             )}
           </Menu.Item>
+
+          
         </Menu.Items>
+        
       </Menu>
     )
   }
@@ -106,6 +121,7 @@ const Walletbar: FunctionComponent<WalletbarProps> = ({
       </div>
     )
   }
+
 }
 
 export default Walletbar;

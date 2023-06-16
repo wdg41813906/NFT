@@ -5,17 +5,26 @@ import { MenuIcon, XIcon } from '@heroicons/react/outline';
 import { useAccount, useNetwork } from '@hooks/web3';
 import ActiveLink from '../link';
 import Walletbar from './Walletbar';
+import { ethers } from 'ethers';
+import { Select } from 'antd';
+import { useMemo } from 'react';
 
-const navigation = [
+const base = [
   { name: 'Home', href: '/', current: true },
-  // { name: 'Create', href: '/nft/create', current: false },
-  // { name: 'NFT', href: '/manage/nftShow', current: false },
-  { name: 'InternetCelebrity', href: '/manage/internetCelebrity', current: false },
+  // { name: 'InternetCelebrity', href: '/manage/internetCelebrity', current: false },
+  // { name: 'Brand', href: '/manage/brand', current: false }, 
+  // { name: 'Buyer', href: '/manage/buyer', current: false },
+  // { name: 'Platform', href: '/manage/platform', current: false },
+  // { name: 'Create', href: '/nft/create', current: false }
+]
+const create =[
+  { name: 'Create', href: '/nft/create', current: false }
+]
+const other = [
+    { name: 'InternetCelebrity', href: '/manage/internetCelebrity', current: false },
   { name: 'Brand', href: '/manage/brand', current: false }, 
   { name: 'Buyer', href: '/manage/buyer', current: false },
   { name: 'Platform', href: '/manage/platform', current: false },
-  // { name: 'Marketplace', href: '/', current: true },
-  { name: 'Create', href: '/nft/create', current: false }
 ]
 
 function classNames(...classes: string[]) {
@@ -25,6 +34,27 @@ function classNames(...classes: string[]) {
 export default function Navbar() {
   const { account } = useAccount();
   const { network } = useNetwork();
+  const { role, setRole } = account;
+  // { value: 'platform', label: 'platform' },
+  // { value: 'internetCelebrity', label: 'internetCelebrity' },
+  // { value: 'brand', label: 'brand' },
+  // { value: 'buyer', label: 'buyer' },
+  const navigation = useMemo(()=>{
+    switch (role){
+      case 'platform':
+        return [...base, ...other, ...create];
+      case 'internetCelebrity':
+        return [...base,  { name: 'InternetCelebrity', href: '/manage/internetCelebrity', current: false }, ...create];
+      case 'brand':
+        return [...base, { name: 'Brand', href: '/manage/brand', current: false }, ...create];
+      case 'buyer':
+        return [...base, { name: 'Buyer', href: '/manage/buyer', current: false }, ...create];
+      default:
+        return [...base, ...other, ...create];
+    }
+
+
+  },[role])
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -71,6 +101,26 @@ export default function Navbar() {
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                <div className='mr-1'>
+                <Select
+                  // defaultValue={
+                  //   role
+                  // }
+                  style={{ width: 120 }}
+                  onChange={(value)=>{
+                    localStorage.setItem('platform-role', value);
+                    setRole(value);
+                  }}
+                  options={[
+                    { value: 'platform', label: 'platform' },
+                    { value: 'internetCelebrity', label: 'internetCelebrity' },
+                    { value: 'brand', label: 'brand' },
+                    { value: 'buyer', label: 'buyer' },
+                  ]}
+                  value={role}
+                  />
+                </div>
+                
                 <div className="text-gray-300 self-center mr-2">
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-sm font-medium bg-purple-100 text-purple-800">
                     <svg className="-ml-0.5 mr-1.5 h-2 w-2 text-indigo-400" fill="currentColor" viewBox="0 0 8 8">
@@ -84,11 +134,17 @@ export default function Navbar() {
                     }
                   </span>
                 </div>
+                <div className="text-gray-300 self-center mr-2">
+                  <span>
+                    you have {Number(account.balance as string)?? ''} enb 
+                  </span>
+                </div>
                 <Walletbar
                   isInstalled={account.isInstalled}
                   isLoading={account.isLoading}
                   connect={account.connect}
                   account={account.data}
+                  balance={account.balance as string}
                 />
               </div>
             </div>

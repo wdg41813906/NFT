@@ -8,6 +8,7 @@ import { useAccount, useListedNfts, useNetwork } from '@hooks/web3';
 import { ExclamationIcon } from '@heroicons/react/solid';
 import { Button } from 'antd';
 import { useWeb3 } from '@providers/web3';
+import { useMemo } from 'react';
 
 // import { Image } from 'antd';
 // import Link from 'next/link';
@@ -16,7 +17,17 @@ import { useWeb3 } from '@providers/web3';
 const Advertisement: NextPage = () => {
   const { network } = useNetwork();
   // const { nfts } = useListedNfts();
-  // const { account } = useAccount();
+  
+  // console.log(parseInt(account?.balance));
+  // const balance= useMemo(()=>{
+  //   const address = account?.data;
+  //   if(address){
+  //     return account?.balanceof(address ?? '')
+  //   }
+  //   // return '';
+  // },[account?.data])
+  // console.log(balance);
+  // console.log(balance);
   // // const state = useWeb3();
   // const clicks =  async () => {
   //   // await nfts?.airDropContract(['0xB38d2D30e1f854C608117aEA7694c52c73929FC7'], [300])
@@ -43,6 +54,7 @@ const Advertisement: NextPage = () => {
                 </a>
               </Link> */}
                {/* <NftList />  */}
+               {/* <Button>{balance}</Button> */}
           { network.isConnectedToNetwork ?
             <NftList /> :
             <div className="rounded-md bg-yellow-50 p-4 mt-10">
