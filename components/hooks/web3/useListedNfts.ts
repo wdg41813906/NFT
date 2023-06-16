@@ -48,7 +48,6 @@ export const hookFactory: ListedNftsHookFactory = ({ contract }) => () => {
 
   const _contract = contract;
   const buyNft = useCallback(async (token: number, value: number, erc20Adress: string, owner: string, userList: string[], priceList: number[]) => {
-    debugger;
     try {
 
       const result = await _contract!.buyNft(
